@@ -1,12 +1,959 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Test Website</title>
+  <title>cavecomputing — Hi, I'm GrizzyBurr!</title>
+  <meta name="description" content="Low-voltage technician with an interest in homelabbing, LLMs, and whatever I feel like. Practical tools, new technology, and creative projects from web apps to character-driven writing.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="assets/logo.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="cavecomputing — Hi, I'm GrizzyBurr!">
+  <meta property="og:description" content="Low-voltage technician into homelabbing, LLMs, and whatever I feel like.">
+  <meta property="og:image" content="assets/cover.png">
+
+  <!-- Avoid a flash of the wrong theme: apply the stored choice before first paint. -->
+  <script>
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem('theme'); } catch (e) {}
+      var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      document.documentElement.dataset.theme = stored || (prefersLight ? 'light' : 'dark');
+    })();
+  </script>
+
+  <style>
+    /* ==========================================================================
+       1. Design tokens
+       ========================================================================== */
+
+    /* Gruvbox dark (default) */
+    :root,
+    [data-theme="dark"] {
+      --bg-page:      #1d2021;
+      --bg-surface:   #282828;
+      --bg-raised:    #32302f;
+      --bg-inset:     #3c3836;
+      --border:       #3c3836;
+      --border-soft:  #32302f;
+
+      --fg:           #ebdbb2;
+      --fg-muted:     #a89984;
+      --fg-subtle:    #7c6f64;
+
+      --accent:       #fabd2f; /* yellow  */
+      --accent-alt:   #b8bb26; /* green   */
+      --accent-cool:  #83a598; /* blue    */
+      --accent-warm:  #fe8019; /* orange  */
+      --accent-rose:  #d3869b; /* purple  */
+      --accent-aqua:  #8ec07c; /* aqua    */
+
+      --btn-fg:       #1d2021;
+      --hero-scrim:   linear-gradient(
+                        90deg,
+                        rgba(29, 32, 33, 0.95) 0%,
+                        rgba(29, 32, 33, 0.88) 40%,
+                        rgba(29, 32, 33, 0.40) 70%,
+                        rgba(29, 32, 33, 0.10) 100%
+                      );
+      --shadow:       0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.22);
+      --shadow-card:  0 1px 2px rgba(0, 0, 0, 0.30), 0 4px 12px rgba(0, 0, 0, 0.20);
+      --shadow-lift:  0 2px 4px rgba(0, 0, 0, 0.32), 0 12px 28px rgba(0, 0, 0, 0.34);
+    }
+
+    /* Gruvbox light */
+    [data-theme="light"] {
+      --bg-page:      #f9f5d7;
+      --bg-surface:   #fbf1c7;
+      --bg-raised:    #f2e5bc;
+      --bg-inset:     #ebdbb2;
+      --border:       #e0d3ac;
+      --border-soft:  #ebdbb2;
+
+      --fg:           #3c3836;
+      --fg-muted:     #665c54;
+      --fg-subtle:    #7c6f64;
+
+      --accent:       #b57614;
+      --accent-alt:   #79740e;
+      --accent-cool:  #076678;
+      --accent-warm:  #af3a03;
+      --accent-rose:  #8f3f71;
+      --accent-aqua:  #427b58;
+
+      --btn-fg:       #fbf1c7;
+      --hero-scrim:   linear-gradient(
+                        90deg,
+                        rgba(251, 241, 199, 0.95) 0%,
+                        rgba(251, 241, 199, 0.88) 40%,
+                        rgba(251, 241, 199, 0.40) 70%,
+                        rgba(251, 241, 199, 0.08) 100%
+                      );
+      --shadow:       0 1px 2px rgba(60, 56, 54, 0.10), 0 8px 24px rgba(60, 56, 54, 0.07);
+      --shadow-card:  0 1px 2px rgba(60, 56, 54, 0.07), 0 4px 12px rgba(60, 56, 54, 0.07);
+      --shadow-lift:  0 2px 4px rgba(60, 56, 54, 0.09), 0 12px 26px rgba(60, 56, 54, 0.13);
+    }
+
+    /* Light mode uses green as the primary button fill (see concept). */
+    [data-theme="light"] { --btn-bg: var(--accent-alt); }
+    [data-theme="dark"]  { --btn-bg: var(--accent); }
+
+    :root {
+      --font-mono: ui-monospace, "JetBrains Mono", "Cascadia Code", "SF Mono",
+                   Menlo, Consolas, "Liberation Mono", monospace;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+                   "Helvetica Neue", Arial, sans-serif;
+
+      --radius-sm: 6px;
+      --radius:    10px;
+      --radius-lg: 14px;
+
+      --space-1: 0.375rem;
+      --space-2: 0.625rem;
+      --space-3: 1rem;
+      --space-4: 1.5rem;
+      --space-5: 2.25rem;
+
+      --shell-width: 1080px;
+      --transition: 160ms ease;
+    }
+
+    /* ==========================================================================
+       2. Base
+       ========================================================================== */
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      padding: var(--space-4) var(--space-3);
+      background: var(--bg-page);
+      color: var(--fg);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    h1, h2, h3, h4 {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    p { margin: 0; }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    img { display: block; max-width: 100%; }
+
+    ul { margin: 0; padding: 0; list-style: none; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ==========================================================================
+       3. Layout primitives
+       ========================================================================== */
+
+    .shell {
+      max-width: var(--shell-width);
+      margin: 0 auto;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .shell__body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      padding: var(--space-4);
+    }
+
+    /* Generic card used by every content block. */
+    .card {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      box-shadow: var(--shadow-card);
+      transition: border-color var(--transition), box-shadow var(--transition),
+                  transform var(--transition);
+    }
+
+    .card--link:hover,
+    .card:hover { box-shadow: var(--shadow-lift); }
+    .card--link:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    .grid { display: grid; gap: var(--space-3); }
+    .grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    /* ==========================================================================
+       4. Shared components
+       ========================================================================== */
+
+    .icon {
+      width: 1.15em;
+      height: 1.15em;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--border);
+      font-size: 1.125rem;
+    }
+    .section-title .icon { color: var(--accent-alt); width: 1.25em; height: 1.25em; }
+
+    /* Qualifier after a section name — quieter so the name still leads. */
+    .section-title__sub {
+      color: var(--fg-muted);
+      font-size: 0.875rem;
+      font-weight: 400;
+    }
+
+    .badge {
+      margin-left: auto;
+      padding: 0.15em 0.6em;
+      border: 1px solid var(--accent-warm);
+      border-radius: var(--radius-sm);
+      color: var(--accent-warm);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: 0.9375rem;
+      letter-spacing: 0.01em;
+    }
+    .card-title .icon { color: var(--accent); }
+
+    .prose {
+      color: var(--fg-muted);
+      font-size: 0.875rem;
+      line-height: 1.65;
+    }
+
+    /* Text link with a trailing arrow that nudges on hover. */
+    .arrow-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+    }
+    .arrow-link .icon { width: 1em; height: 1em; transition: transform var(--transition); }
+    .arrow-link:hover { color: var(--accent-alt); }
+    .arrow-link:hover .icon { transform: translateX(3px); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+      padding: 0.55em 1.1em;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition),
+                  color var(--transition), transform var(--transition);
+    }
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn--primary {
+      background: var(--btn-bg);
+      color: var(--btn-fg);
+      box-shadow: var(--shadow-card);
+    }
+    .btn--primary:hover { filter: brightness(1.08); box-shadow: var(--shadow-lift); }
+
+    .btn--ghost {
+      background: color-mix(in srgb, var(--bg-surface) 70%, transparent);
+      border-color: var(--border);
+      color: var(--fg);
+      backdrop-filter: blur(3px);
+    }
+    .btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    .tag {
+      padding: 0.2em 0.6em;
+      background: var(--bg-inset);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--fg-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    /* ==========================================================================
+       5. Header
+       ========================================================================== */
+
+    .masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6em;
+      font-family: var(--font-mono);
+      font-size: 1.0625rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .brand__mark {
+      width: 30px;
+      height: 30px;
+      padding: 4px;
+      background: var(--bg-inset);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--accent);
+    }
+    .brand__mark .icon { width: 100%; height: 100%; stroke-width: 1.5; }
+
+    /* Theme toggle — swaps which glyph is visible per theme. */
+    .theme-toggle {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      background: var(--bg-inset);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--fg-muted);
+      cursor: pointer;
+      transition: color var(--transition), border-color var(--transition),
+                  background var(--transition);
+    }
+    .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+    .theme-toggle .icon { width: 17px; height: 17px; grid-area: 1 / 1; }
+
+    [data-theme="dark"]  .theme-toggle .icon--sun  { display: block; }
+    [data-theme="dark"]  .theme-toggle .icon--moon { display: none; }
+    [data-theme="light"] .theme-toggle .icon--sun  { display: none; }
+    [data-theme="light"] .theme-toggle .icon--moon { display: block; }
+
+    /* ==========================================================================
+       6. Hero
+       ========================================================================== */
+
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: clamp(280px, 30vw, 360px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero__image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 62% 45%;
+      z-index: -2;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--hero-scrim);
+      z-index: -1;
+    }
+
+    .hero__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      max-width: 34rem;
+      padding: var(--space-5) var(--space-4);
+    }
+
+    .hero__title {
+      color: var(--accent);
+      font-size: clamp(1.875rem, 4.2vw, 2.5rem);
+      letter-spacing: -0.01em;
+    }
+
+    .hero__tagline {
+      color: var(--accent-alt);
+      font-family: var(--font-mono);
+      font-size: clamp(0.875rem, 1.6vw, 1rem);
+      font-weight: 600;
+    }
+
+    .hero__blurb {
+      max-width: 31rem;
+      color: var(--fg);
+      font-size: 0.9375rem;
+    }
+
+    /* ==========================================================================
+       7. Empty-state placeholder (WIP sections)
+       ========================================================================== */
+
+    .placeholder {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--space-1);
+      min-height: 150px;
+      padding-right: 150px;
+      border-style: dashed;
+    }
+
+    .placeholder__title {
+      color: var(--fg-muted);
+      font-family: var(--font-mono);
+      font-size: 0.9375rem;
+      font-weight: 600;
+    }
+
+    .placeholder .prose { max-width: 34rem; }
+
+    /* ==========================================================================
+       8. Featured project
+       ========================================================================== */
+
+    .featured {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr) minmax(0, 15rem);
+      gap: var(--space-4);
+      align-items: start;
+    }
+
+    .featured__art {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--bg-inset);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      object-fit: cover;
+    }
+
+    .featured__main {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .featured__tagline {
+      color: var(--accent-alt);
+      font-family: var(--font-mono);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .featured__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      margin-top: var(--space-1);
+    }
+
+    .featured__side {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      padding-left: var(--space-4);
+      border-left: 1px solid var(--border);
+    }
+
+    .feature {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 0.1rem var(--space-2);
+    }
+    .feature .icon {
+      grid-row: span 2;
+      align-self: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--accent-aqua);
+    }
+    .feature__name {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+    .feature__desc { color: var(--fg-muted); font-size: 0.8125rem; line-height: 1.45; }
+
+    /* ==========================================================================
+       9. Bottom cards
+       ========================================================================== */
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      height: 100%;
+    }
+    .stack .arrow-link { margin-top: auto; }
+
+    /* Decorative mushrooms tucked into the corner of the characters card. */
+    .card--decorated { position: relative; overflow: hidden; }
+    .decor-mushrooms {
+      position: absolute;
+      right: var(--space-3);
+      bottom: 0;
+      width: 118px;
+      height: auto;
+      opacity: 0.95;
+      pointer-events: none;
+    }
+
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      font-size: 0.875rem;
+    }
+    .checklist li { display: flex; align-items: center; gap: var(--space-2); }
+    .checklist .icon { color: var(--accent-alt); width: 1rem; height: 1rem; }
+
+    .linklist { display: flex; flex-direction: column; }
+    .linklist li + li { border-top: 1px solid var(--border-soft); }
+    .linklist a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      padding: 0.55rem 0;
+      color: var(--accent-cool);
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+    }
+    .linklist .icon { color: var(--fg-subtle); transition: transform var(--transition), color var(--transition); }
+    .linklist a:hover { color: var(--accent); }
+    .linklist a:hover .icon { color: var(--accent); transform: translateX(3px); }
+
+    .linklist a.is-soon { color: var(--fg-muted); cursor: default; }
+    .linklist a.is-soon:hover { color: var(--fg-muted); }
+    .soon {
+      padding: 0.05em 0.5em;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--fg-subtle);
+      font-size: 0.6875rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* ==========================================================================
+       10. Footer
+       ========================================================================== */
+
+    .colophon {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-4);
+      border-top: 1px solid var(--border);
+      color: var(--fg-subtle);
+      font-size: 0.8125rem;
+    }
+    .colophon__left { display: flex; align-items: center; gap: var(--space-2); }
+    .colophon__left .icon { color: var(--accent-warm); }
+    .colophon__right { display: flex; align-items: center; gap: 0.4em; font-family: var(--font-mono); }
+    .colophon__right .icon { color: var(--accent-warm); }
+
+    /* ==========================================================================
+       11. Responsive
+       ========================================================================== */
+
+    @media (max-width: 900px) {
+      .featured { grid-template-columns: 130px minmax(0, 1fr); }
+      .featured__side {
+        grid-column: 1 / -1;
+        padding-left: 0;
+        padding-top: var(--space-3);
+        border-left: 0;
+        border-top: 1px solid var(--border);
+      }
+    }
+
+    @media (max-width: 620px) {
+      body { padding: var(--space-2); }
+      .shell__body { padding: var(--space-3); gap: var(--space-3); }
+      .masthead { padding: var(--space-3); }
+
+      .hero { min-height: 0; }
+      .hero__content { padding: var(--space-4) var(--space-3); }
+
+      .featured { grid-template-columns: minmax(0, 1fr); }
+      .featured__art { max-width: 140px; }
+
+      .grid--2 { grid-template-columns: minmax(0, 1fr); }
+      .placeholder { padding-right: var(--space-4); }
+      .decor-mushrooms { display: none; }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Hello, world.</h1>
-  <p>This website is hosted on GitHub Pages.</p>
+
+  <!-- ==========================================================================
+       Icon sprite — add new glyphs here, reference with <use href="#icon-name">
+       ========================================================================== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-bear" viewBox="0 0 24 24">
+        <circle cx="6.8" cy="7" r="2.9"/>
+        <circle cx="17.2" cy="7" r="2.9"/>
+        <path d="M12 20.6c-4 0-7-2.8-7-6.5s3-6.6 7-6.6 7 2.9 7 6.6-3 6.5-7 6.5Z"/>
+        <ellipse cx="12" cy="16.1" rx="3.3" ry="2.5"/>
+        <path d="M9.4 12.4h.01M14.6 12.4h.01" stroke-width="2.2"/>
+        <circle cx="12" cy="14.9" r="0.55" fill="currentColor" stroke="none"/>
+      </symbol>
+
+      <symbol id="i-user" viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="3.6"/>
+        <path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>
+      </symbol>
+
+      <symbol id="i-code" viewBox="0 0 24 24">
+        <path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 4.5l-3 15"/>
+      </symbol>
+
+      <symbol id="i-book" viewBox="0 0 24 24">
+        <path d="M12 6.5C10.6 5.2 8.6 4.5 6 4.5H3v13h3c2.6 0 4.6.7 6 2 1.4-1.3 3.4-2 6-2h3v-13h-3c-2.6 0-4.6.7-6 2Z"/>
+        <path d="M12 6.5v13"/>
+      </symbol>
+
+      <symbol id="i-heart" viewBox="0 0 24 24">
+        <path d="M12 20.5S3.5 15.6 3.5 9.9A4.4 4.4 0 0 1 12 8a4.4 4.4 0 0 1 8.5 1.9c0 5.7-8.5 10.6-8.5 10.6Z"/>
+      </symbol>
+
+      <symbol id="i-bubble" viewBox="0 0 24 24">
+        <path d="M6.2 4h11.6a3 3 0 0 1 3 3v6.4a3 3 0 0 1-3 3h-6.6l-3.9 2.9V16.4H6.2a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Z"/>
+      </symbol>
+
+      <symbol id="i-campfire" viewBox="0 0 24 24">
+        <path d="M12 3.6c3.1 3.1 4.7 5.5 4.7 7.8a4.7 4.7 0 0 1-9.4 0c0-2.3 1.6-4.7 4.7-7.8Z"/>
+        <path d="M12 11.4c1.2 1.3 1.8 2.2 1.8 3a1.8 1.8 0 0 1-3.6 0c0-.8.6-1.7 1.8-3Z"/>
+        <path d="M3.8 20.4 20.2 16.6M3.8 16.6l16.4 3.8"/>
+      </symbol>
+
+      <symbol id="i-shield" viewBox="0 0 24 24">
+        <path d="M12 21s7-3.2 7-8.6V5.6L12 3 5 5.6v6.8C5 17.8 12 21 12 21Z"/>
+        <path d="m9 12 2 2 4-4"/>
+      </symbol>
+
+      <symbol id="i-sliders" viewBox="0 0 24 24">
+        <path d="M5 21V14M5 10V3M12 21v-9M12 8V3M19 21v-5M19 12V3"/>
+        <path d="M2.5 14h5M9.5 8h5M16.5 16h5"/>
+      </symbol>
+
+      <symbol id="i-spark" viewBox="0 0 24 24">
+        <path d="M12 3.5 13.8 9l5.7 1.8-5.7 1.8L12 18.5l-1.8-5.9L4.5 10.8 10.2 9Z"/>
+        <path d="M18.5 16.5 19 18l1.5.5-1.5.5-.5 1.5-.5-1.5L16.5 18l1.5-.5Z"/>
+      </symbol>
+
+      <symbol id="i-tools" viewBox="0 0 24 24">
+        <path d="M14.5 6.5a3.5 3.5 0 0 0 4.7 4.7l-8 8a2.4 2.4 0 0 1-3.4-3.4Z"/>
+        <path d="m6.5 4 2.8 2.8M4 6.5l2.8 2.8"/>
+        <path d="m4.5 9.5 5 5"/>
+      </symbol>
+
+      <symbol id="i-globe" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M3 12h18M12 3c2.4 2.5 3.6 5.6 3.6 9S14.4 18.5 12 21c-2.4-2.5-3.6-5.6-3.6-9S9.6 5.5 12 3Z"/>
+      </symbol>
+
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M4 12h15M13 6l6 6-6 6"/>
+      </symbol>
+
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="m4 12.5 5 5 11-11"/>
+      </symbol>
+
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/>
+      </symbol>
+
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4 8.4 8.4 0 1 0 20 14.2Z"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="shell">
+
+    <!-- ====================================================================
+         Header
+         ==================================================================== -->
+    <header class="masthead">
+      <a class="brand" href="#top">
+        <span class="brand__mark"><svg class="icon" aria-hidden="true"><use href="#i-bear"/></svg></span>
+        <span>cavecomputing</span>
+      </a>
+
+      <button class="theme-toggle" type="button" id="theme-toggle"
+              aria-label="Switch between light and dark theme">
+        <svg class="icon icon--sun" aria-hidden="true"><use href="#i-sun"/></svg>
+        <svg class="icon icon--moon" aria-hidden="true"><use href="#i-moon"/></svg>
+      </button>
+    </header>
+
+    <div class="shell__body" id="top">
+
+      <!-- ==================================================================
+           Hero
+           ================================================================== -->
+      <section class="hero">
+        <img class="hero__image" src="assets/cover.png" alt="" aria-hidden="true">
+        <div class="hero__content">
+          <h1 class="hero__title">Hi, I'm GrizzyBurr!</h1>
+          <p class="hero__tagline"><em>Or just Matt is fine</em></p>
+          <p class="hero__blurb">
+            I'm a low-voltage technician with an interest in homelabbing, LLMs, and
+            whatever I feel like. I spend my time building practical tools,
+            experimenting with new technology, and working on creative projects
+            ranging from web apps to character-driven writing. And I love reading
+            WLW romance.
+          </p>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           Featured project
+           ================================================================== -->
+      <section id="projects">
+        <h2 class="section-title">
+          <svg class="icon" aria-hidden="true"><use href="#i-bubble"/></svg>
+          Cozy <span class="section-title__sub">| LLM Roleplay Frontend</span>
+        </h2>
+
+        <div class="card featured">
+          <img class="featured__art" src="assets/logo.png" alt="Cozy app icon">
+
+          <div class="featured__main">
+            <p class="featured__tagline">
+              Self-hosted, single-user, with a little Discord inspiration ✨
+            </p>
+            <p class="prose">
+              Cozy works with SillyTavern-compatible V2 character cards and
+              OpenAI-style LLM servers. Personas, lorebooks, prompt presets, auto
+              summaries, themes, and chat import/export — all running on your own
+              machine.
+            </p>
+            <ul class="featured__tags">
+              <li class="tag">Python</li>
+              <li class="tag">Flask</li>
+              <li class="tag">Docker</li>
+              <li class="tag">Apache-2.0</li>
+            </ul>
+          </div>
+
+          <div class="featured__side">
+            <div class="feature">
+              <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
+              <span class="feature__name">Self-hosted</span>
+              <span class="feature__desc">Chats, keys, and characters stay on your machine.</span>
+            </div>
+            <div class="feature">
+              <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
+              <span class="feature__name">V2 Character Cards</span>
+              <span class="feature__desc">Drop-in SillyTavern compatibility.</span>
+            </div>
+            <div class="feature">
+              <svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>
+              <span class="feature__name">Personas &amp; lorebooks</span>
+              <span class="feature__desc">Prompt presets, themes, auto summaries.</span>
+            </div>
+            <div class="feature">
+              <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>
+              <span class="feature__name">Bring your own model</span>
+              <span class="feature__desc">Any OpenAI-style endpoint.</span>
+            </div>
+            <a class="arrow-link" href="https://github.com/cavecomputing/cozy"
+               target="_blank" rel="noopener">
+              Check it out <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           Characters — gallery goes here once cards are ready
+           ================================================================== -->
+      <section id="characters">
+        <h2 class="section-title">
+          <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
+          Characters <span class="section-title__sub">| Character Card v2 Compliant</span>
+          <span class="badge">WIP</span>
+        </h2>
+
+        <div class="card card--decorated placeholder">
+          <p class="placeholder__title">Nothing here yet.</p>
+          <p class="prose">
+            Character cards I create will show up here — stories, roleplay, and
+            worldbuilding.
+          </p>
+
+          <svg class="decor-mushrooms" viewBox="0 0 120 70" aria-hidden="true">
+            <ellipse cx="60" cy="64" rx="52" ry="6" fill="var(--accent-alt)" opacity=".18"/>
+            <g>
+              <path d="M52 64c0-7 1-12 3-14h6c2 2 3 7 3 14Z" fill="#d5c4a1"/>
+              <path d="M40 50c0-9 8-16 18-16s18 7 18 16Z" fill="#cc241d"/>
+              <circle cx="49" cy="44" r="2.6" fill="#fbf1c7"/>
+              <circle cx="60" cy="40" r="3.1" fill="#fbf1c7"/>
+              <circle cx="69" cy="45" r="2.3" fill="#fbf1c7"/>
+            </g>
+            <g>
+              <path d="M82 64c0-5 .8-9 2-10.5h4.5c1.2 1.5 2 5.5 2 10.5Z" fill="#d5c4a1"/>
+              <path d="M74 54c0-6.5 5.5-11.5 12.5-11.5S99 47.5 99 54Z" fill="#9d0006"/>
+              <circle cx="81" cy="50" r="2" fill="#fbf1c7"/>
+              <circle cx="90" cy="48" r="2.4" fill="#fbf1c7"/>
+            </g>
+            <g>
+              <path d="M24 64c0-4 .6-7 1.6-8.2h3.6c1 1.2 1.6 4.2 1.6 8.2Z" fill="#d5c4a1"/>
+              <path d="M18 56c0-5 4.4-9 9.4-9s9.4 4 9.4 9Z" fill="#cc241d"/>
+              <circle cx="24" cy="53" r="1.7" fill="#fbf1c7"/>
+              <circle cx="31" cy="51.5" r="1.9" fill="#fbf1c7"/>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           Characters / About / Links
+           ================================================================== -->
+      <div class="grid grid--2">
+
+        <section class="card" id="about">
+          <div class="stack">
+            <h2 class="card-title">
+              <svg class="icon" aria-hidden="true"><use href="#i-tools"/></svg> What I Do
+            </h2>
+            <ul class="checklist">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Writing</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Vibe Coding</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Home Labbing</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> WLW Novels ❤️</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="card" id="links">
+          <div class="stack">
+            <h2 class="card-title">
+              <svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> Find Me Online
+            </h2>
+            <!-- Placeholders: swap href and drop `is-soon` once the profile exists. -->
+            <ul class="linklist">
+              <li>
+                <a href="https://github.com/cavecomputing" target="_blank" rel="noopener">
+                  GitHub <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+                </a>
+              </li>
+              <li>
+                <a class="is-soon" href="#links" aria-disabled="true">
+                  Chub.ai <span class="soon">soon</span>
+                </a>
+              </li>
+              <li>
+                <a class="is-soon" href="#links" aria-disabled="true">
+                  WyvernChat <span class="soon">soon</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         Footer
+         ==================================================================== -->
+    <footer class="colophon">
+      <span class="colophon__left">
+        <svg class="icon" aria-hidden="true"><use href="#i-campfire"/></svg>
+        © <span id="year">2026</span> cavecomputing
+      </span>
+      <span class="colophon__right">
+        Made with <svg class="icon" role="img" aria-label="a bear"><use href="#i-bear"/></svg> and love
+      </span>
+    </footer>
+
+  </div>
+
+  <script>
+    // Theme toggle — persists the explicit choice; the pre-paint script above
+    // reads it back on the next visit.
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('theme-toggle');
+
+      toggle.addEventListener('click', function () {
+        var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch (e) {}
+      });
+    })();
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
 </body>
 </html>
