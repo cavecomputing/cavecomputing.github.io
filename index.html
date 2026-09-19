@@ -122,6 +122,10 @@
       font-family: var(--font-sans);
       font-size: 15px;
       line-height: 1.6;
+      /* Character names and blurbs come from card JSON, so a long unbroken token
+         is possible; break it rather than let .shell's overflow:hidden clip it.
+         Does not affect the quick-start <pre>, which sets white-space: pre. */
+      overflow-wrap: break-word;
       -webkit-font-smoothing: antialiased;
       transition: background var(--transition), color var(--transition);
     }
@@ -155,6 +159,9 @@
       html { scroll-behavior: auto; }
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
+        /* Without this an `infinite` animation (the gallery skeleton) becomes a
+           very fast loop rather than stopping. */
+        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
     }
@@ -191,12 +198,7 @@
                   transform var(--transition);
     }
 
-    .card--link:hover,
     .card:hover { box-shadow: var(--shadow-lift); }
-    .card--link:hover { border-color: var(--accent); transform: translateY(-2px); }
-
-    .grid { display: grid; gap: var(--space-3); }
-    .grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
     /* ==========================================================================
        4. Shared components
@@ -233,46 +235,13 @@
       font-size: 0.875rem;
       font-weight: 400;
     }
-
-    .badge {
-      margin-left: auto;
-      padding: 0.15em 0.6em;
-      border: 1px solid var(--accent-warm);
-      border-radius: var(--radius-sm);
-      color: var(--accent-warm);
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-    }
-
-    .card-title {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-size: 0.9375rem;
-      letter-spacing: 0.01em;
-    }
-    .card-title .icon { color: var(--accent); }
+    .section-title__sub::before { content: "| "; }
 
     .prose {
       color: var(--fg-muted);
       font-size: 0.875rem;
       line-height: 1.65;
     }
-
-    /* Text link with a trailing arrow that nudges on hover. */
-    .arrow-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4em;
-      color: var(--accent);
-      font-family: var(--font-mono);
-      font-size: 0.8125rem;
-    }
-    .arrow-link .icon { width: 1em; height: 1em; transition: transform var(--transition); }
-    .arrow-link:hover { color: var(--accent-alt); }
-    .arrow-link:hover .icon { transform: translateX(3px); }
 
     .btn {
       display: inline-flex;
@@ -296,14 +265,6 @@
       box-shadow: var(--shadow-card);
     }
     .btn--primary:hover { filter: brightness(1.08); box-shadow: var(--shadow-lift); }
-
-    .btn--ghost {
-      background: color-mix(in srgb, var(--bg-surface) 70%, transparent);
-      border-color: var(--border);
-      color: var(--fg);
-      backdrop-filter: blur(3px);
-    }
-    .btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
 
     .tag {
       padding: 0.2em 0.6em;
@@ -591,7 +552,7 @@
       display: flex;
       align-items: center;
       gap: var(--space-2);
-      padding: 0.35rem var(--space-3);
+      padding: 0.15rem var(--space-3);
       background: var(--bg-inset);
       border-bottom: 1px solid var(--border);
       font-family: var(--font-mono);
@@ -610,7 +571,7 @@
       align-items: center;
       gap: 0.35em;
       flex: none;
-      padding: 0.25rem 0;
+      padding: 0.45rem 0;
       background: transparent;
       border: 0;
       color: var(--fg-muted);
@@ -802,14 +763,6 @@
        9. Bottom cards
        ========================================================================== */
 
-    .stack {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-      height: 100%;
-    }
-    .stack .arrow-link { margin-top: auto; }
-
     /* Decorative mushrooms tucked into the corner of the characters card. */
     .card--decorated { position: relative; overflow: hidden; }
     .decor-mushrooms {
@@ -861,6 +814,11 @@
       .shell__body { padding: var(--space-3); gap: var(--space-3); }
       .hero { aspect-ratio: 3 / 2; min-height: 260px; }
       .hero__bar { padding: var(--space-3); }
+
+      /* Qualifier becomes a subtitle line rather than wrapping mid-phrase. */
+      .section-title { flex-wrap: wrap; row-gap: 0.1rem; }
+      .section-title__sub { flex-basis: 100%; }
+      .section-title__sub::before { content: none; }
       .hero__foot { flex-direction: column; align-items: flex-start; gap: var(--space-2);
                     padding: 0 var(--space-3) var(--space-3); }
 
@@ -872,7 +830,6 @@
         justify-content: center;
       }
 
-      .grid--2 { grid-template-columns: minmax(0, 1fr); }
       .placeholder { padding-right: var(--space-4); }
       .decor-mushrooms { display: none; }
     }
@@ -1019,22 +976,9 @@
         <circle cx="12" cy="14.9" r="0.55" fill="currentColor" stroke="none"/>
       </symbol>
 
-      <symbol id="i-user" viewBox="0 0 24 24">
-        <circle cx="12" cy="8" r="3.6"/>
-        <path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>
-      </symbol>
-
-      <symbol id="i-code" viewBox="0 0 24 24">
-        <path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 4.5l-3 15"/>
-      </symbol>
-
       <symbol id="i-book" viewBox="0 0 24 24">
         <path d="M12 6.5C10.6 5.2 8.6 4.5 6 4.5H3v13h3c2.6 0 4.6.7 6 2 1.4-1.3 3.4-2 6-2h3v-13h-3c-2.6 0-4.6.7-6 2Z"/>
         <path d="M12 6.5v13"/>
-      </symbol>
-
-      <symbol id="i-heart" viewBox="0 0 24 24">
-        <path d="M12 20.5S3.5 15.6 3.5 9.9A4.4 4.4 0 0 1 12 8a4.4 4.4 0 0 1 8.5 1.9c0 5.7-8.5 10.6-8.5 10.6Z"/>
       </symbol>
 
       <symbol id="i-bubble" viewBox="0 0 24 24">
@@ -1062,23 +1006,8 @@
         <path d="M18.5 16.5 19 18l1.5.5-1.5.5-.5 1.5-.5-1.5L16.5 18l1.5-.5Z"/>
       </symbol>
 
-      <symbol id="i-tools" viewBox="0 0 24 24">
-        <path d="M14.5 6.5a3.5 3.5 0 0 0 4.7 4.7l-8 8a2.4 2.4 0 0 1-3.4-3.4Z"/>
-        <path d="m6.5 4 2.8 2.8M4 6.5l2.8 2.8"/>
-        <path d="m4.5 9.5 5 5"/>
-      </symbol>
-
-      <symbol id="i-globe" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9"/>
-        <path d="M3 12h18M12 3c2.4 2.5 3.6 5.6 3.6 9S14.4 18.5 12 21c-2.4-2.5-3.6-5.6-3.6-9S9.6 5.5 12 3Z"/>
-      </symbol>
-
       <symbol id="i-github" viewBox="0 0 16 16">
         <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
-      </symbol>
-
-      <symbol id="i-arrow" viewBox="0 0 24 24">
-        <path d="M4 12h15M13 6l6 6-6 6"/>
       </symbol>
 
       <symbol id="i-copy" viewBox="0 0 24 24">
@@ -1135,14 +1064,14 @@
       </div>
     </header>
 
-    <div class="shell__body" id="top">
+    <div class="shell__body">
       <!-- ==================================================================
            Cozy
            ================================================================== -->
       <section id="projects">
         <h2 class="section-title">
           <svg class="icon" aria-hidden="true"><use href="#i-bubble"/></svg>
-          Cozy <span class="section-title__sub">| LLM Roleplay Frontend</span>
+          Cozy <span class="section-title__sub">LLM Roleplay Frontend</span>
         </h2>
 
         <div class="card featured">
@@ -1151,11 +1080,11 @@
             <div class="featured__heading">
               <h3 class="featured__name">Cozy</h3>
               <p class="featured__tagline">
-                Self-hosted, single-user, with a little Discord inspiration ✨
+                Self-hosted, single-user, with a little Discord inspiration&nbsp;✨
               </p>
             </div>
             <a class="btn btn--primary" href="https://github.com/cavecomputing/cozy"
-               target="_blank" rel="noopener">
+               target="_blank" rel="noopener" aria-label="View on GitHub: Cozy">
               <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
               View on GitHub
             </a>
@@ -1221,7 +1150,7 @@
       <section id="nanobear">
         <h2 class="section-title">
           <svg class="icon" aria-hidden="true"><use href="#i-bear"/></svg>
-          NanoBear <span class="section-title__sub">| System Prompts</span>
+          NanoBear <span class="section-title__sub">System Prompts</span>
         </h2>
 
         <div class="card nanobear">
@@ -1277,7 +1206,7 @@
               <li class="tag">CC BY 4.0</li>
             </ul>
             <a class="btn btn--primary" href="https://github.com/cavecomputing/nanobear"
-               target="_blank" rel="noopener">
+               target="_blank" rel="noopener" aria-label="View on GitHub: NanoBear">
               <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
               View on GitHub
             </a>
@@ -1291,7 +1220,7 @@
       <section id="characters">
         <h2 class="section-title">
           <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
-          Characters <span class="section-title__sub">| Character Card v2 Compliant</span>
+          Characters <span class="section-title__sub">Character Card v2 Compliant</span>
         </h2>
 
         <!-- Populated at runtime from /characters via the GitHub Contents API — see script below. -->
@@ -1445,9 +1374,9 @@
 
       function cardHtml(c) {
         return (
-          '<a class="char-card" href="' + c.pngPath + '" download ' +
+          '<a class="char-card" href="' + escapeHtml(c.path) + '" download ' +
              'title="Download ' + escapeHtml(c.name) + '.png">' +
-            '<img class="char-card__img" src="' + c.imgPath + '" ' +
+            '<img class="char-card__img" src="' + escapeHtml(c.path) + '" ' +
                'alt="' + escapeHtml(c.name) + ' character card art" loading="lazy">' +
             '<div class="char-card__scrim"></div>' +
             '<div class="char-card__info">' +
@@ -1488,13 +1417,14 @@
           if (!slugs.length) { showEmptyState(); return; }
 
           return Promise.all(slugs.map(function (slug) {
-            return fetch(FOLDER + '/' + jsons[slug].name)
+            return fetch(FOLDER + '/' + encodeURIComponent(jsons[slug].name))
               .then(function (r) { return r.json(); })
               .then(function (card) {
                 var data = card.data || card;
                 return {
-                  imgPath: FOLDER + '/' + pngs[slug].name,
-                  pngPath: FOLDER + '/' + pngs[slug].name,
+                  // Filenames come from whatever is dropped in the folder, so they
+                  // have to survive both the URL and the attribute they land in.
+                  path: FOLDER + '/' + encodeURIComponent(pngs[slug].name),
                   name: data.name || slug,
                   blurb: blurbFrom(data.creator_notes),
                   tags: (data.tags || []).slice(0, 4)
