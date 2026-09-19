@@ -471,23 +471,18 @@
       border-bottom: 1px solid var(--border);
     }
 
+    /* No border or backing plate: every logo carries its own rounded tile, and
+       a plate behind them only shows as a ring at the corners. */
     .featured__art {
       width: 64px;
       height: 64px;
       flex: none;
-      background: var(--bg-inset);
-      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow-card);
       object-fit: cover;
     }
 
     .featured__heading { display: flex; flex-direction: column; gap: 0.15rem; }
-
-    .featured__name {
-      font-size: 1.4rem;
-      margin: 0;
-    }
 
     .featured__tagline {
       color: var(--accent-alt);
@@ -503,7 +498,9 @@
       gap: var(--space-1);
     }
 
-    .featured__banner .btn { flex: none; margin-left: auto; }
+    /* Top-aligned, not centred: Cozy's 64px icon makes its banner taller than
+       the others, and the button should sit at the same height in all three. */
+    .featured__banner .btn { flex: none; margin-left: auto; align-self: flex-start; }
 
     /* Pitch column and feature panel share a row so neither leaves a dead edge. */
     .featured__body {
@@ -932,7 +929,6 @@
 
       /* Match the Cozy card: a full-width tap target on phones. */
       .variants__foot { flex-direction: column; align-items: stretch; }
-      .variants__foot .btn { justify-content: center; }
     }
 
     /* Stacked: the divider moves from the side to the top. Placed after the
@@ -956,6 +952,26 @@
 
     @media (max-width: 400px) {
       .hero__bar { padding: var(--space-2) var(--space-3); }
+    }
+
+    /* ==========================================================================
+       Eldritch Text Corpus — the same featured shell as Cozy, but a single
+       column: there is no feature panel to sit beside the pitch.
+       ========================================================================== */
+
+    .corpus__body {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-3);
+      max-width: 48rem;
+    }
+
+    /* Lede type, matching the Cozy pitch column. */
+    .corpus__body .prose {
+      color: var(--fg);
+      font-size: 0.9375rem;
+      line-height: 1.75;
     }
   </style>
 </head>
@@ -1032,6 +1048,11 @@
         <path d="M12 3.5v11M8 10.5l4 4 4-4"/>
         <path d="M4.5 16.5v2.7a1.8 1.8 0 0 0 1.8 1.8h11.4a1.8 1.8 0 0 0 1.8-1.8v-2.7"/>
       </symbol>
+
+      <symbol id="i-eye" viewBox="0 0 24 24">
+        <path d="M1.9 12S5.6 5.3 12 5.3 22.1 12 22.1 12 18.4 18.7 12 18.7 1.9 12 1.9 12Z"/>
+        <circle cx="12" cy="12" r="3.1"/>
+      </symbol>
     </defs>
   </svg>
 
@@ -1060,7 +1081,9 @@
             Roleplay tooling, system prompts, and character cards by GrizzyBurr
           </p>
         </div>
-        <p class="hero__credit">Cover art by Wendigold</p>
+        <p class="hero__credit">Cover art by
+          <a href="https://vgen.co/Wendigold" target="_blank" rel="noopener">Wendigold</a>
+        </p>
       </div>
     </header>
 
@@ -1078,7 +1101,6 @@
           <div class="featured__banner">
             <img class="featured__art" src="assets/logo.png" alt="Cozy app icon">
             <div class="featured__heading">
-              <h3 class="featured__name">Cozy</h3>
               <p class="featured__tagline">
                 Self-hosted, single-user, with a little Discord inspiration&nbsp;✨
               </p>
@@ -1154,6 +1176,20 @@
         </h2>
 
         <div class="card nanobear">
+          <div class="featured__banner">
+            <img class="featured__art" src="assets/nanobear.png" alt="NanoBear logo">
+            <div class="featured__heading">
+              <p class="featured__tagline">
+                Two system prompts: one to play the scene, one to read it
+              </p>
+            </div>
+            <a class="btn btn--primary" href="https://github.com/cavecomputing/nanobear"
+               target="_blank" rel="noopener" aria-label="View on GitHub: NanoBear">
+              <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
+              View on GitHub
+            </a>
+          </div>
+
           <div class="variants">
             <article class="variant">
               <div class="variant__head">
@@ -1205,11 +1241,6 @@
             <ul class="variant__tags">
               <li class="tag">CC BY 4.0</li>
             </ul>
-            <a class="btn btn--primary" href="https://github.com/cavecomputing/nanobear"
-               target="_blank" rel="noopener" aria-label="View on GitHub: NanoBear">
-              <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
-              View on GitHub
-            </a>
           </div>
         </div>
       </section>
@@ -1226,6 +1257,52 @@
         <!-- Populated at runtime from /characters via the GitHub Contents API — see script below. -->
         <div class="char-grid" id="char-grid" aria-live="polite" aria-busy="true">
           <div class="char-card char-card--skeleton" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           Eldritch Text Corpus
+           ================================================================== -->
+      <section id="corpus">
+        <h2 class="section-title">
+          <svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg>
+          Eldritch Text Corpus <span class="section-title__sub">Training Dataset</span>
+        </h2>
+
+        <div class="card featured">
+          <div class="featured__banner">
+            <img class="featured__art" src="assets/eldritch.png" alt="Eldritch Text Corpus logo">
+            <div class="featured__heading">
+              <p class="featured__tagline">
+                Public-domain horror, pruned down to the parts worth training on
+              </p>
+            </div>
+            <a class="btn btn--primary" href="https://github.com/cavecomputing/eldritch-text-corpus"
+               target="_blank" rel="noopener" aria-label="View on GitHub: Eldritch Text Corpus">
+              <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
+              View on GitHub
+            </a>
+          </div>
+
+          <div class="corpus__body">
+            <p class="prose">
+              Public-domain horror fiction, edited down and compiled into text files
+              meant as a springboard for fine-tuning. Rambling digressions, repetitive
+              stretches, and anything that wanders off from the story get cut, so what
+              is left is prose a model can actually learn voice and atmosphere from.
+            </p>
+            <p class="prose">
+              The weighting leans eldritch &mdash; Lovecraft, Blackwood, and the company
+              they keep. Other authors are not ruled out; anything that holds up under
+              the same pruning can go in.
+            </p>
+
+            <ul class="featured__tags">
+              <li class="tag">Fine-tuning</li>
+              <li class="tag">Public domain</li>
+              <li class="tag">CC0-1.0</li>
+            </ul>
+          </div>
         </div>
       </section>
     </div>
