@@ -373,25 +373,24 @@
     }
     .hero::before {
       top: 0;
-      height: 60%;
+      height: 38%;
       background: linear-gradient(to bottom,
-                  rgba(var(--hero-ink), 0.8) 4%,
-                  rgba(var(--hero-ink), 0.3) 42%,
-                  rgba(var(--hero-ink), 0));
+                  rgba(var(--hero-ink), 0.66), rgba(var(--hero-ink), 0));
     }
     .hero::after {
       bottom: 0;
-      height: 30%;
+      height: 55%;
       background: linear-gradient(to top,
-                  rgba(var(--hero-ink), 0.7), rgba(var(--hero-ink), 0));
+                  rgba(var(--hero-ink), 0.88) 6%,
+                  rgba(var(--hero-ink), 0.45) 45%,
+                  rgba(var(--hero-ink), 0));
     }
 
-    /* Title on the left, theme toggle on the right, both at the top. */
+    /* Holds the theme toggle on its own, hard right. */
     .hero__bar {
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: var(--space-3);
+      align-items: center;
+      justify-content: flex-end;
       padding: var(--space-3) var(--space-4);
     }
 
@@ -406,8 +405,10 @@
 
     .hero__foot {
       display: flex;
-      justify-content: flex-end;
-      padding: 0 var(--space-4) var(--space-3);
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: 0 var(--space-4) var(--space-4);
     }
 
     .hero__plate { max-width: 40rem; }
@@ -538,11 +539,10 @@
     .featured__tags {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
       gap: var(--space-1);
-      max-width: 22rem;
-      margin-left: auto;
     }
+
+    .featured__banner .btn { flex: none; margin-left: auto; }
 
     /* Pitch column and feature panel share a row so neither leaves a dead edge. */
     .featured__body {
@@ -558,6 +558,8 @@
       justify-content: center;
       gap: var(--space-3);
     }
+    /* Tags sit at the bottom of the column, matching the NanoBear variants. */
+    .featured__pitch .featured__tags { margin-top: auto; }
     /* Lede type: the featured card's intro should outweigh the smaller project cards. */
     .featured__pitch .prose {
       margin: 0;
@@ -845,7 +847,8 @@
        ========================================================================== */
 
     @media (max-width: 900px) {
-      .featured__tags { max-width: 16rem; }
+      .featured__banner { flex-wrap: wrap; }
+      .featured__heading { flex: 1 1 10rem; min-width: 0; }
     }
 
     @media (max-width: 760px) {
@@ -858,19 +861,16 @@
       .shell__body { padding: var(--space-3); gap: var(--space-3); }
       .hero { aspect-ratio: 3 / 2; min-height: 260px; }
       .hero__bar { padding: var(--space-3); }
-      .hero__foot { padding: 0 var(--space-3) var(--space-2); }
+      .hero__foot { flex-direction: column; align-items: flex-start; gap: var(--space-2);
+                    padding: 0 var(--space-3) var(--space-3); }
 
-      .featured__banner { flex-wrap: wrap; }
-      /* Keep the icon beside the name; push the tag row onto its own line. */
+      /* Keep the icon beside the name; push the button onto its own full line. */
       .featured__heading { flex: 1 1 8rem; min-width: 0; }
-      .featured__tags {
+      .featured__banner .btn {
         flex-basis: 100%;
-        justify-content: flex-start;
-        max-width: none;
         margin-left: 0;
+        justify-content: center;
       }
-      .featured__pitch { align-items: stretch; }
-      .featured__pitch .btn { justify-content: center; }
 
       .grid--2 { grid-template-columns: minmax(0, 1fr); }
       .placeholder { padding-right: var(--space-4); }
@@ -1117,13 +1117,6 @@
            alt="A bear in a red flannel shirt dozing on a mossy log in a pine forest">
 
       <div class="hero__bar">
-        <div class="hero__plate">
-          <h1 class="hero__title">cave<b>computing</b></h1>
-          <p class="hero__sub">
-            Roleplay tooling, system prompts, and character cards by GrizzyBurr
-          </p>
-        </div>
-
         <button class="theme-toggle" type="button" id="theme-toggle"
                 aria-label="Switch between light and dark theme">
           <svg class="icon icon--sun" aria-hidden="true"><use href="#i-sun"/></svg>
@@ -1132,6 +1125,12 @@
       </div>
 
       <div class="hero__foot">
+        <div class="hero__plate">
+          <h1 class="hero__title">cave<b>computing</b></h1>
+          <p class="hero__sub">
+            Roleplay tooling, system prompts, and character cards by GrizzyBurr
+          </p>
+        </div>
         <p class="hero__credit">Cover art by Wendigold</p>
       </div>
     </header>
@@ -1155,11 +1154,11 @@
                 Self-hosted, single-user, with a little Discord inspiration ✨
               </p>
             </div>
-            <ul class="featured__tags">
-              <li class="tag">Python</li>
-              <li class="tag">Flask</li>
-              <li class="tag">Apache-2.0</li>
-            </ul>
+            <a class="btn btn--primary" href="https://github.com/cavecomputing/cozy"
+               target="_blank" rel="noopener">
+              <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
+              View on GitHub
+            </a>
           </div>
 
           <div class="featured__body">
@@ -1183,11 +1182,11 @@
                 <pre class="quickstart__code" id="quickstart-code"><span>git clone https://github.com/cavecomputing/cozy.git</span><span>cd cozy &amp;&amp; uv sync</span><span>uv run app.py <i># then open localhost:5001</i></span></pre>
               </div>
 
-              <a class="btn btn--primary" href="https://github.com/cavecomputing/cozy"
-                 target="_blank" rel="noopener">
-                <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
-                View on GitHub
-              </a>
+              <ul class="featured__tags">
+                <li class="tag">Python</li>
+                <li class="tag">Flask</li>
+                <li class="tag">Apache-2.0</li>
+              </ul>
             </div>
 
             <ul class="featured__grid">
