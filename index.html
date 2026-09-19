@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>cavecomputing — Hi, I'm GrizzyBurr!</title>
-  <meta name="description" content="Ex IT technician, current low-voltage technician with an interest in homelabbing, LLMs, and whatever I feel like. Practical tools, new technology, and creative projects from web apps to character-driven writing.">
+  <title>cavecomputing — projects by GrizzyBurr</title>
+  <meta name="description" content="Cozy, a self-hosted LLM roleplay frontend; the NanoBear system prompts; and V2 character cards. Projects by GrizzyBurr.">
   <meta name="color-scheme" content="dark light">
   <link rel="icon" href="assets/favicon.png">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="cavecomputing — Hi, I'm GrizzyBurr!">
-  <meta property="og:description" content="Low-voltage technician into homelabbing, LLMs, and whatever I feel like.">
-  <meta property="og:image" content="assets/cover.png">
+  <meta property="og:title" content="cavecomputing — projects by GrizzyBurr">
+  <meta property="og:description" content="Cozy, the NanoBear system prompts, and V2 character cards.">
+  <meta property="og:image" content="assets/cover-web.jpg">
 
   <!-- Avoid a flash of the wrong theme: apply the stored choice before first paint. -->
   <script>
@@ -51,13 +51,6 @@
       --accent-aqua:  #8ec07c; /* aqua    */
 
       --btn-fg:       #1d2021;
-      --hero-scrim:   linear-gradient(
-                        90deg,
-                        rgba(29, 32, 33, 0.95) 0%,
-                        rgba(29, 32, 33, 0.88) 40%,
-                        rgba(29, 32, 33, 0.40) 70%,
-                        rgba(29, 32, 33, 0.10) 100%
-                      );
       --shadow:       0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.22);
       --shadow-card:  0 1px 2px rgba(0, 0, 0, 0.30), 0 4px 12px rgba(0, 0, 0, 0.20);
       --shadow-lift:  0 2px 4px rgba(0, 0, 0, 0.32), 0 12px 28px rgba(0, 0, 0, 0.34);
@@ -84,13 +77,6 @@
       --accent-aqua:  #427b58;
 
       --btn-fg:       #fbf1c7;
-      --hero-scrim:   linear-gradient(
-                        90deg,
-                        rgba(251, 241, 199, 0.95) 0%,
-                        rgba(251, 241, 199, 0.88) 40%,
-                        rgba(251, 241, 199, 0.40) 70%,
-                        rgba(251, 241, 199, 0.08) 100%
-                      );
       --shadow:       0 1px 2px rgba(60, 56, 54, 0.10), 0 8px 24px rgba(60, 56, 54, 0.07);
       --shadow-card:  0 1px 2px rgba(60, 56, 54, 0.07), 0 4px 12px rgba(60, 56, 54, 0.07);
       --shadow-lift:  0 2px 4px rgba(60, 56, 54, 0.09), 0 12px 26px rgba(60, 56, 54, 0.13);
@@ -227,6 +213,9 @@
       stroke-linejoin: round;
     }
 
+    /* Brand marks (GitHub) are filled shapes, not stroked line art. */
+    .icon--solid { fill: currentColor; stroke: none; }
+
     .section-title {
       display: flex;
       align-items: center;
@@ -330,34 +319,130 @@
        5. Header
        ========================================================================== */
 
-    .masthead {
+    /* --------------------------------------------------------------------
+       Hero — the cover art carries the header controls on top of it.
+       Overlay colors are fixed (not themed): the art is the same in light
+       and dark, so the text over it has to read against the art, not the UI.
+       -------------------------------------------------------------------- */
+
+    .hero {
+      --hero-fg:     #f9f5d7;
+      --hero-muted:  #d5c4a1;
+      --hero-accent: #fabd2f;
+      --hero-ink:    24, 26, 27;
+
+      /* Wordmark highlight. Tracks the theme like the primary buttons do, but
+         light mode uses the BRIGHT gruvbox green rather than the button's own
+         #79740e — that olive only clears 1.3-2.4:1 over the scrimmed art. */
+      --hero-brand:  var(--hero-accent);
+
+      position: relative;
+      z-index: 0;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      justify-content: space-between;
+      /* width must stay definite, or aspect-ratio resolves it FROM min-height
+         and the hero (and the shell with it) overflows narrow viewports. */
+      width: 100%;
+      aspect-ratio: 2.6 / 1;
+      min-height: 300px;
+      background: #1d2021;
+    }
+
+    [data-theme="light"] .hero { --hero-brand: #b8bb26; }
+
+    .hero__art {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Sit slightly high in the frame so the bear's face survives the crop. */
+      object-position: center 40%;
+    }
+
+    /* Gradient scrims at both ends — the only thing keeping the overlay legible. */
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .hero::before {
+      top: 0;
+      height: 60%;
+      background: linear-gradient(to bottom,
+                  rgba(var(--hero-ink), 0.8) 4%,
+                  rgba(var(--hero-ink), 0.3) 42%,
+                  rgba(var(--hero-ink), 0));
+    }
+    .hero::after {
+      bottom: 0;
+      height: 30%;
+      background: linear-gradient(to top,
+                  rgba(var(--hero-ink), 0.7), rgba(var(--hero-ink), 0));
+    }
+
+    /* Title on the left, theme toggle on the right, both at the top. */
+    .hero__bar {
+      display: flex;
+      align-items: flex-start;
       justify-content: space-between;
       gap: var(--space-3);
       padding: var(--space-3) var(--space-4);
-      border-bottom: 1px solid var(--border);
     }
 
-    .brand {
+    .hero .theme-toggle {
+      flex: none;
+      background: rgba(var(--hero-ink), 0.45);
+      border-color: rgba(249, 245, 215, 0.22);
+      color: var(--hero-muted);
+      backdrop-filter: blur(4px);
+    }
+    .hero .theme-toggle:hover { color: var(--hero-accent); border-color: var(--hero-accent); }
+
+    .hero__foot {
       display: flex;
-      align-items: center;
-      gap: 0.6em;
+      justify-content: flex-end;
+      padding: 0 var(--space-4) var(--space-3);
+    }
+
+    .hero__plate { max-width: 40rem; }
+
+    .hero__title {
+      margin: 0;
+      color: var(--hero-fg);
+      font-size: clamp(1.9rem, 4.4vw, 2.8rem);
+      letter-spacing: -0.01em;
+      text-shadow: 0 2px 14px rgba(var(--hero-ink), 0.65);
+    }
+    .hero__title b {
+      font-weight: inherit;
+      color: var(--hero-brand);
+    }
+
+    .hero__sub {
+      margin-top: 0.4rem;
+      color: var(--hero-muted);
       font-family: var(--font-mono);
-      font-size: 1.0625rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      text-shadow: 0 1px 10px rgba(var(--hero-ink), 0.8);
     }
-    .brand__mark {
-      width: 30px;
-      height: 30px;
-      padding: 4px;
-      background: var(--bg-inset);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--accent);
+
+    .hero__credit {
+      flex: none;
+      color: rgba(249, 245, 215, 0.6);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 8px rgba(var(--hero-ink), 0.9);
     }
-    .brand__mark .icon { width: 100%; height: 100%; stroke-width: 1.5; }
+    .hero__credit a { color: inherit; border-bottom: 1px solid rgba(249, 245, 215, 0.3); }
+    .hero__credit a:hover { color: var(--hero-accent); border-bottom-color: var(--hero-accent); }
 
     /* Theme toggle — swaps which glyph is visible per theme. */
     .theme-toggle {
@@ -381,66 +466,6 @@
     [data-theme="dark"]  .theme-toggle .icon--moon { display: none; }
     [data-theme="light"] .theme-toggle .icon--sun  { display: none; }
     [data-theme="light"] .theme-toggle .icon--moon { display: block; }
-
-    /* ==========================================================================
-       6. Hero
-       ========================================================================== */
-
-    .hero {
-      position: relative;
-      display: flex;
-      align-items: center;
-      min-height: clamp(280px, 30vw, 360px);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-card);
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    .hero__image {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: 62% 45%;
-      z-index: -2;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: var(--hero-scrim);
-      z-index: -1;
-    }
-
-    .hero__content {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-      max-width: 34rem;
-      padding: var(--space-5) var(--space-4);
-    }
-
-    .hero__title {
-      color: var(--accent);
-      font-size: clamp(1.875rem, 4.2vw, 2.5rem);
-      letter-spacing: -0.01em;
-    }
-
-    .hero__tagline {
-      color: var(--accent-alt);
-      font-family: var(--font-mono);
-      font-size: clamp(0.875rem, 1.6vw, 1rem);
-      font-weight: 600;
-    }
-
-    .hero__blurb {
-      max-width: 31rem;
-      color: var(--fg);
-      font-size: 0.9375rem;
-    }
 
     /* ==========================================================================
        7. Empty-state placeholder (WIP sections)
@@ -470,15 +495,24 @@
        ========================================================================== */
 
     .featured {
-      display: grid;
-      grid-template-columns: 160px minmax(0, 1fr) minmax(0, 15rem);
-      gap: var(--space-4);
-      align-items: start;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    /* Top strip: icon + name/tagline on the left, stack tags on the right. */
+    .featured__banner {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--border);
     }
 
     .featured__art {
-      width: 100%;
-      aspect-ratio: 1;
+      width: 64px;
+      height: 64px;
+      flex: none;
       background: var(--bg-inset);
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -486,10 +520,11 @@
       object-fit: cover;
     }
 
-    .featured__main {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
+    .featured__heading { display: flex; flex-direction: column; gap: 0.15rem; }
+
+    .featured__name {
+      font-size: 1.4rem;
+      margin: 0;
     }
 
     .featured__tagline {
@@ -497,28 +532,131 @@
       font-family: var(--font-mono);
       font-size: 0.9375rem;
       font-weight: 600;
-      line-height: 1.5;
+      line-height: 1.4;
     }
 
     .featured__tags {
       display: flex;
       flex-wrap: wrap;
+      justify-content: flex-end;
       gap: var(--space-1);
-      margin-top: var(--space-1);
+      max-width: 22rem;
+      margin-left: auto;
     }
 
-    .featured__side {
+    /* Pitch column and feature panel share a row so neither leaves a dead edge. */
+    .featured__body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: var(--space-4);
+    }
+
+    .featured__pitch {
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
       gap: var(--space-3);
-      padding-left: var(--space-4);
-      border-left: 1px solid var(--border);
     }
+    /* Lede type: the featured card's intro should outweigh the smaller project cards. */
+    .featured__pitch .prose {
+      margin: 0;
+      color: var(--fg);
+      font-size: 0.9375rem;
+      line-height: 1.75;
+    }
+
+    .featured__grid {
+      display: grid;
+      align-content: space-between;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      background: color-mix(in srgb, var(--bg-inset) 50%, transparent);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+    }
+
+    /* Terminal-style quick start under the pitch copy. */
+    .quickstart {
+      width: 100%;
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .quickstart__head {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.35rem var(--space-3);
+      background: var(--bg-inset);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .quickstart__label { color: var(--accent); font-weight: 600; }
+    .quickstart__note { margin-left: auto; color: var(--fg-subtle); }
+
+    /* Borderless: horizontal padding would inset the label past the header's own
+       padding, so "COPY" would not line up with "QUICK START" on the other side. */
+    .quickstart__copy {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35em;
+      flex: none;
+      padding: 0.25rem 0;
+      background: transparent;
+      border: 0;
+      color: var(--fg-muted);
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+    /* Give the small label a hit area worth tapping without moving the label. */
+    .quickstart__copy::after {
+      content: "";
+      position: absolute;
+      inset: -0.5rem -0.4rem;
+    }
+    .quickstart__copy:hover { color: var(--accent); }
+    .quickstart__copy:active { color: var(--accent-warm); }
+    .quickstart__copy .icon { width: 0.85rem; height: 0.85rem; }
+    .quickstart__copy .icon--done { display: none; }
+    .quickstart__copy.is-copied { color: var(--accent-alt); }
+    .quickstart__copy.is-copied .icon--copy { display: none; }
+    .quickstart__copy.is-copied .icon--done { display: block; }
+
+    .quickstart__code {
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      overflow-x: auto;
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      line-height: 1.85;
+    }
+    /* The prompt is a pseudo-element so it stays out of copied text. */
+    .quickstart__code span { display: block; white-space: pre; }
+    .quickstart__code span::before {
+      content: "$ ";
+      color: var(--accent-alt);
+    }
+    .quickstart__code i { color: var(--fg-subtle); font-style: normal; }
 
     .feature {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
       gap: 0.1rem var(--space-2);
+    }
+    .feature + .feature {
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--border-soft);
     }
     .feature .icon {
       grid-row: span 2;
@@ -527,6 +665,9 @@
       height: 1.25rem;
       color: var(--accent-aqua);
     }
+    .feature:nth-child(2) .icon { color: var(--accent-cool); }
+    .feature:nth-child(3) .icon { color: var(--accent-rose); }
+    .feature:nth-child(4) .icon { color: var(--accent-warm); }
     .feature__name {
       font-family: var(--font-mono);
       font-size: 0.8125rem;
@@ -559,6 +700,21 @@
       border-color: var(--accent);
       box-shadow: var(--shadow-lift);
       transform: translateY(-2px);
+    }
+
+    /* Holds one row of grid height while the gallery fetch is in flight, so the
+       page does not grow by a card row ~300ms after load. Same aspect-ratio as a
+       real card, so it reserves the right height at any column width. */
+    .char-card--skeleton {
+      background: var(--bg-inset);
+      border-style: dashed;
+      box-shadow: none;
+      animation: char-skeleton 1.4s ease-in-out infinite;
+    }
+    .char-card--skeleton:hover { transform: none; border-color: var(--border); }
+    @keyframes char-skeleton {
+      0%, 100% { opacity: 0.45; }
+      50%      { opacity: 0.8; }
     }
 
     .char-card__img {
@@ -664,42 +820,6 @@
       pointer-events: none;
     }
 
-    .checklist {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
-      font-size: 0.875rem;
-    }
-    .checklist li { display: flex; align-items: center; gap: var(--space-2); }
-    .checklist .icon { color: var(--accent-alt); width: 1rem; height: 1rem; }
-
-    .linklist { display: flex; flex-direction: column; }
-    .linklist li + li { border-top: 1px solid var(--border-soft); }
-    .linklist a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-2);
-      padding: 0.55rem 0;
-      color: var(--accent-cool);
-      font-family: var(--font-mono);
-      font-size: 0.8125rem;
-    }
-    .linklist .icon { color: var(--fg-subtle); transition: transform var(--transition), color var(--transition); }
-    .linklist a:hover { color: var(--accent); }
-    .linklist a:hover .icon { color: var(--accent); transform: translateX(3px); }
-
-    .linklist a.is-soon { color: var(--fg-muted); cursor: default; }
-    .linklist a.is-soon:hover { color: var(--fg-muted); }
-    .soon {
-      padding: 0.05em 0.5em;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--fg-subtle);
-      font-size: 0.6875rem;
-      letter-spacing: 0.03em;
-    }
-
     /* ==========================================================================
        10. Footer
        ========================================================================== */
@@ -725,30 +845,160 @@
        ========================================================================== */
 
     @media (max-width: 900px) {
-      .featured { grid-template-columns: 130px minmax(0, 1fr); }
-      .featured__side {
-        grid-column: 1 / -1;
-        padding-left: 0;
-        padding-top: var(--space-3);
-        border-left: 0;
-        border-top: 1px solid var(--border);
-      }
+      .featured__tags { max-width: 16rem; }
+    }
+
+    @media (max-width: 760px) {
+      .featured__body { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+      .hero { aspect-ratio: 2 / 1; }
     }
 
     @media (max-width: 620px) {
       body { padding: var(--space-2); }
       .shell__body { padding: var(--space-3); gap: var(--space-3); }
-      .masthead { padding: var(--space-3); }
+      .hero { aspect-ratio: 3 / 2; min-height: 260px; }
+      .hero__bar { padding: var(--space-3); }
+      .hero__foot { padding: 0 var(--space-3) var(--space-2); }
 
-      .hero { min-height: 0; }
-      .hero__content { padding: var(--space-4) var(--space-3); }
-
-      .featured { grid-template-columns: minmax(0, 1fr); }
-      .featured__art { max-width: 140px; }
+      .featured__banner { flex-wrap: wrap; }
+      /* Keep the icon beside the name; push the tag row onto its own line. */
+      .featured__heading { flex: 1 1 8rem; min-width: 0; }
+      .featured__tags {
+        flex-basis: 100%;
+        justify-content: flex-start;
+        max-width: none;
+        margin-left: 0;
+      }
+      .featured__pitch { align-items: stretch; }
+      .featured__pitch .btn { justify-content: center; }
 
       .grid--2 { grid-template-columns: minmax(0, 1fr); }
       .placeholder { padding-right: var(--space-4); }
       .decor-mushrooms { display: none; }
+    }
+
+    /* ==========================================================================
+       Redesign additions — projects-first layout
+       ========================================================================== */
+
+    /* One card holding both NanoBear prompts, split down the middle. */
+    .nanobear {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .variants {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+
+    .variant {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    /* The rule that separates the two halves — deliberately stronger than the
+       card borders, since telling the two prompts apart is the whole point. */
+    .variant + .variant {
+      padding-left: var(--space-4);
+      border-left: 1px solid color-mix(in srgb, var(--fg-subtle) 45%, transparent);
+    }
+    .variant .prose { flex: 1; }
+
+    .variant__head {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .variant__head .icon { color: var(--accent-cool); }
+    .variant:nth-child(2) .variant__head .icon { color: var(--accent-rose); }
+
+    .variant__name { font-size: 1.05rem; margin: 0; }
+
+    .variant__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      list-style: none;
+    }
+
+    /* Shared foot: the licence and the one repo link cover both prompts. */
+    .variants__foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--border);
+    }
+
+    /* At-a-glance facts about a prompt — what it narrates, how long, where it runs. */
+    .spec {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 0.3rem var(--space-3);
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      background: color-mix(in srgb, var(--bg-inset) 50%, transparent);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+    }
+    .spec dt {
+      color: var(--fg-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .spec dd {
+      margin: 0;
+      color: var(--fg-muted);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
+    .spec code {
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+    }
+
+    /* Label above value reads better than a squeezed two-column pair on phones.
+       Must follow the .spec rules above to win on equal specificity. */
+    @media (max-width: 620px) {
+      .spec { grid-template-columns: minmax(0, 1fr); gap: 0; }
+      .spec dt { margin-top: 0.5rem; }
+      .spec dt:first-of-type { margin-top: 0; }
+
+      /* Match the Cozy card: a full-width tap target on phones. */
+      .variants__foot { flex-direction: column; align-items: stretch; }
+      .variants__foot .btn { justify-content: center; }
+    }
+
+    /* Stacked: the divider moves from the side to the top. Placed after the
+       .variants rules above so it wins on equal specificity. */
+    @media (max-width: 760px) {
+      .variants { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+      .variant + .variant {
+        padding-left: 0;
+        padding-top: var(--space-3);
+        border-left: 0;
+        border-top: 1px solid color-mix(in srgb, var(--fg-subtle) 45%, transparent);
+      }
+    }
+
+    /* The "needs git + uv" hint is the first thing to go when the quick-start
+       header runs out of room — the copy button matters more. */
+    @media (max-width: 520px) {
+      .quickstart__note { display: none; }
+      .quickstart__copy { margin-left: auto; }
+    }
+
+    @media (max-width: 400px) {
+      .hero__bar { padding: var(--space-2) var(--space-3); }
     }
   </style>
 </head>
@@ -823,8 +1073,17 @@
         <path d="M3 12h18M12 3c2.4 2.5 3.6 5.6 3.6 9S14.4 18.5 12 21c-2.4-2.5-3.6-5.6-3.6-9S9.6 5.5 12 3Z"/>
       </symbol>
 
+      <symbol id="i-github" viewBox="0 0 16 16">
+        <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
+      </symbol>
+
       <symbol id="i-arrow" viewBox="0 0 24 24">
         <path d="M4 12h15M13 6l6 6-6 6"/>
+      </symbol>
+
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="12" height="12" rx="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
       </symbol>
 
       <symbol id="i-check" viewBox="0 0 24 24">
@@ -850,42 +1109,36 @@
   <div class="shell">
 
     <!-- ====================================================================
-         Header
+         Hero — cover art with the header controls laid over it
          ==================================================================== -->
-    <header class="masthead">
-      <a class="brand" href="#top">
-        <span class="brand__mark"><svg class="icon" aria-hidden="true"><use href="#i-bear"/></svg></span>
-        <span>cavecomputing</span>
-      </a>
+    <header class="hero">
+      <img class="hero__art" src="assets/cover-web.jpg" width="2000" height="1125"
+           fetchpriority="high"
+           alt="A bear in a red flannel shirt dozing on a mossy log in a pine forest">
 
-      <button class="theme-toggle" type="button" id="theme-toggle"
-              aria-label="Switch between light and dark theme">
-        <svg class="icon icon--sun" aria-hidden="true"><use href="#i-sun"/></svg>
-        <svg class="icon icon--moon" aria-hidden="true"><use href="#i-moon"/></svg>
-      </button>
+      <div class="hero__bar">
+        <div class="hero__plate">
+          <h1 class="hero__title">cave<b>computing</b></h1>
+          <p class="hero__sub">
+            Roleplay tooling, system prompts, and character cards by GrizzyBurr
+          </p>
+        </div>
+
+        <button class="theme-toggle" type="button" id="theme-toggle"
+                aria-label="Switch between light and dark theme">
+          <svg class="icon icon--sun" aria-hidden="true"><use href="#i-sun"/></svg>
+          <svg class="icon icon--moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        </button>
+      </div>
+
+      <div class="hero__foot">
+        <p class="hero__credit">Cover art by Wendigold</p>
+      </div>
     </header>
 
     <div class="shell__body" id="top">
-
       <!-- ==================================================================
-           Hero
-           ================================================================== -->
-      <section class="hero">
-        <img class="hero__image" src="assets/cover.png" alt="" aria-hidden="true">
-        <div class="hero__content">
-          <h1 class="hero__title">Hi, I'm GrizzyBurr!</h1>
-          <p class="hero__tagline"><em>Or just Matt is fine</em></p>
-          <p class="hero__blurb">
-            I'm an ex IT technician and current low-voltage technician with an interest in homelabbing, LLMs, and
-            whatever I feel like. I spend my time screwing around vibe coding practical tools,
-            experimenting with new technology, and working on creative projects
-            ranging from web apps to character-driven writing.
-          </p>
-        </div>
-      </section>
-
-      <!-- ==================================================================
-           Featured project
+           Cozy
            ================================================================== -->
       <section id="projects">
         <h2 class="section-title">
@@ -894,116 +1147,147 @@
         </h2>
 
         <div class="card featured">
-          <img class="featured__art" src="assets/logo.png" alt="Cozy app icon">
-
-          <div class="featured__main">
-            <p class="featured__tagline">
-              Self-hosted, single-user, with a little Discord inspiration ✨
-            </p>
-            <p class="prose">
-              Cozy works with SillyTavern-compatible V2 character cards and
-              OpenAI-style LLM servers. Personas, lorebooks, prompt presets, auto
-              summaries, themes, and chat import/export — all running on your own
-              machine.
-            </p>
+          <div class="featured__banner">
+            <img class="featured__art" src="assets/logo.png" alt="Cozy app icon">
+            <div class="featured__heading">
+              <h3 class="featured__name">Cozy</h3>
+              <p class="featured__tagline">
+                Self-hosted, single-user, with a little Discord inspiration ✨
+              </p>
+            </div>
             <ul class="featured__tags">
               <li class="tag">Python</li>
               <li class="tag">Flask</li>
-              <li class="tag">Docker</li>
               <li class="tag">Apache-2.0</li>
             </ul>
           </div>
 
-          <div class="featured__side">
-            <div class="feature">
-              <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
-              <span class="feature__name">Self-hosted</span>
-              <span class="feature__desc">Chats, keys, and characters stay on your machine.</span>
+          <div class="featured__body">
+            <div class="featured__pitch">
+              <p class="prose">
+                Cozy works with SillyTavern-compatible V2 character cards and
+                OpenAI-style LLM servers. Personas, lorebooks, prompt presets, auto
+                summaries, themes, and chat import/export — all running on your own
+                machine.
+              </p>
+              <div class="quickstart">
+                <div class="quickstart__head">
+                  <span class="quickstart__label">Quick start</span>
+                  <span class="quickstart__note">needs git + uv</span>
+                  <button class="quickstart__copy" type="button" id="quickstart-copy">
+                    <svg class="icon icon--copy" aria-hidden="true"><use href="#i-copy"/></svg>
+                    <svg class="icon icon--done" aria-hidden="true"><use href="#i-check"/></svg>
+                    <span class="quickstart__copy-label">Copy</span>
+                  </button>
+                </div>
+                <pre class="quickstart__code" id="quickstart-code"><span>git clone https://github.com/cavecomputing/cozy.git</span><span>cd cozy &amp;&amp; uv sync</span><span>uv run app.py <i># then open localhost:5001</i></span></pre>
+              </div>
+
+              <a class="btn btn--primary" href="https://github.com/cavecomputing/cozy"
+                 target="_blank" rel="noopener">
+                <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
+                View on GitHub
+              </a>
             </div>
-            <div class="feature">
-              <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
-              <span class="feature__name">V2 Character Cards</span>
-              <span class="feature__desc">Drop-in SillyTavern compatibility.</span>
-            </div>
-            <div class="feature">
-              <svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>
-              <span class="feature__name">Personas &amp; lorebooks</span>
-              <span class="feature__desc">Prompt presets, themes, auto summaries.</span>
-            </div>
-            <div class="feature">
-              <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>
-              <span class="feature__name">Bring your own model</span>
-              <span class="feature__desc">Any OpenAI-style endpoint.</span>
-            </div>
-            <a class="arrow-link" href="https://github.com/cavecomputing/cozy"
-               target="_blank" rel="noopener">
-              Check it out <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
-            </a>
+
+            <ul class="featured__grid">
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
+                <span class="feature__name">Self-hosted</span>
+                <span class="feature__desc">Chats, keys, and characters stay on your machine.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
+                <span class="feature__name">V2 character cards</span>
+                <span class="feature__desc">Drop-in SillyTavern compatibility.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>
+                <span class="feature__name">Personas &amp; lorebooks</span>
+                <span class="feature__desc">Prompt presets, themes, auto summaries.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>
+                <span class="feature__name">Bring your own model</span>
+                <span class="feature__desc">Any OpenAI-style endpoint, local or remote.</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
 
       <!-- ==================================================================
-           Featured project — Luna
+           NanoBear system prompts
            ================================================================== -->
-      <section id="luna">
+      <section id="nanobear">
         <h2 class="section-title">
-          <svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>
-          Luna <span class="section-title__sub">| Desktop AI Chat Client</span>
+          <svg class="icon" aria-hidden="true"><use href="#i-bear"/></svg>
+          NanoBear <span class="section-title__sub">| System Prompts</span>
         </h2>
 
-        <div class="card featured">
-          <img class="featured__art" src="assets/luna-icon.png" alt="Luna app icon">
+        <div class="card nanobear">
+          <div class="variants">
+            <article class="variant">
+              <div class="variant__head">
+                <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>
+                <h3 class="variant__name">NanoBear</h3>
+              </div>
+              <p class="prose">
+                The base prompt. The model plays <code>{{char}}</code> and the side cast
+                and leaves you to yourself. Characters act on their own goals and only
+                know what they have witnessed or could plausibly deduce. Small enough to
+                leave the context window for the story.
+              </p>
+              <dl class="spec">
+                <dt>Narrates</dt>
+                <dd><code>{{char}}</code> and side characters</dd>
+                <dt>Response</dt>
+                <dd>1&ndash;2 paragraphs, show-don&rsquo;t-tell</dd>
+              </dl>
+              <ul class="variant__tags">
+                <li class="tag">Roleplay</li>
+                <li class="tag">Compact</li>
+              </ul>
+            </article>
 
-          <div class="featured__main">
-            <p class="featured__tagline">
-              A desktop chat client for OpenAI-compatible models, for macOS and Windows
-            </p>
-            <p class="prose">
-              Luna is an app you install on your own computer. Point it at any
-              OpenAI-compatible provider — OpenAI itself, or a local server like LM
-              Studio, Ollama, or llama.cpp — and it stores every conversation on your
-              machine, sending messages only to the provider you configured.
-            </p>
-            <ul class="featured__tags">
-              <li class="tag">Electron</li>
-              <li class="tag">React</li>
-              <li class="tag">TypeScript</li>
-              <li class="tag">Apache-2.0</li>
-            </ul>
+            <article class="variant">
+              <div class="variant__head">
+                <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
+                <h3 class="variant__name">NanoBear Author</h3>
+              </div>
+              <p class="prose">
+                For when you would rather read than play. Your input is treated as stage
+                direction instead of a turn, and the model writes the whole scene in third
+                person, <code>{{user}}</code> included. Heavier than the base prompt, and
+                carries a blocklist of prose habits it is told to drop.
+              </p>
+              <dl class="spec">
+                <dt>Narrates</dt>
+                <dd>Every character, <code>{{user}}</code> included</dd>
+                <dt>Response</dt>
+                <dd>250&ndash;400 words, YA-novel prose</dd>
+              </dl>
+              <ul class="variant__tags">
+                <li class="tag">Story</li>
+              </ul>
+            </article>
           </div>
 
-          <div class="featured__side">
-            <div class="feature">
-              <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
-              <span class="feature__name">Local-first</span>
-              <span class="feature__desc">Conversations live in a local SQLite database; API keys sit in OS-encrypted storage.</span>
-            </div>
-            <div class="feature">
-              <svg class="icon" aria-hidden="true"><use href="#i-code"/></svg>
-              <span class="feature__name">Markdown &amp; code</span>
-              <span class="feature__desc">Renders markdown, code blocks, and sandboxed HTML previews.</span>
-            </div>
-            <div class="feature">
-              <svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>
-              <span class="feature__name">Fast &amp; Expert modes</span>
-              <span class="feature__desc">Assign two models, switch between them per conversation.</span>
-            </div>
-            <div class="feature">
-              <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>
-              <span class="feature__name">Bring your own model</span>
-              <span class="feature__desc">Any OpenAI Responses or Chat Completions endpoint.</span>
-            </div>
-            <a class="arrow-link" href="https://github.com/cavecomputing/luna"
+          <div class="variants__foot">
+            <ul class="variant__tags">
+              <li class="tag">CC BY 4.0</li>
+            </ul>
+            <a class="btn btn--primary" href="https://github.com/cavecomputing/nanobear"
                target="_blank" rel="noopener">
-              Check it out <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+              <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
+              View on GitHub
             </a>
           </div>
         </div>
       </section>
 
       <!-- ==================================================================
-           Characters — gallery goes here once cards are ready
+           Characters
            ================================================================== -->
       <section id="characters">
         <h2 class="section-title">
@@ -1012,55 +1296,10 @@
         </h2>
 
         <!-- Populated at runtime from /characters via the GitHub Contents API — see script below. -->
-        <div class="char-grid" id="char-grid" aria-live="polite"></div>
+        <div class="char-grid" id="char-grid" aria-live="polite" aria-busy="true">
+          <div class="char-card char-card--skeleton" aria-hidden="true"></div>
+        </div>
       </section>
-
-      <!-- ==================================================================
-           Characters / About / Links
-           ================================================================== -->
-      <div class="grid grid--2">
-
-        <section class="card" id="about">
-          <div class="stack">
-            <h2 class="card-title">
-              <svg class="icon" aria-hidden="true"><use href="#i-tools"/></svg> What I Do
-            </h2>
-            <ul class="checklist">
-              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Writing</li>
-              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Vibe Coding</li>
-              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Home Labbing</li>
-              <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> WLW Novels ❤️</li>
-            </ul>
-          </div>
-        </section>
-
-        <section class="card" id="links">
-          <div class="stack">
-            <h2 class="card-title">
-              <svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> Find Me Online
-            </h2>
-            <!-- Placeholders: swap href and drop `is-soon` once the profile exists. -->
-            <ul class="linklist">
-              <li>
-                <a href="https://github.com/cavecomputing" target="_blank" rel="noopener">
-                  GitHub <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
-                </a>
-              </li>
-              <li>
-                <a href="https://chub.ai/users/grizzyburr" target="_blank" rel="noopener">
-                  Chub.ai <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
-                </a>
-              </li>
-              <li>
-                <a href="https://app.wyvern.chat/profiles/user_Rzy3aQqd2tCqPHUd1tEyD" target="_blank" rel="noopener">
-                  WyvernChat <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-      </div>
     </div>
 
     <!-- ====================================================================
@@ -1089,6 +1328,61 @@
         var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
         root.dataset.theme = next;
         try { localStorage.setItem('theme', next); } catch (e) {}
+      });
+    })();
+
+    // Copy the quick-start commands. The "$" prompts are ::before content and the
+    // trailing hint is an <i>, so neither ends up in the copied text.
+    (function () {
+      var btn = document.getElementById('quickstart-copy');
+      var pre = document.getElementById('quickstart-code');
+      if (!btn || !pre) return;
+
+      var label = btn.querySelector('.quickstart__copy-label');
+      var idle = label.textContent;
+      var timer;
+
+      function commands() {
+        return Array.prototype.map.call(pre.querySelectorAll('span'), function (line) {
+          var copy = line.cloneNode(true);
+          Array.prototype.forEach.call(copy.querySelectorAll('i'), function (hint) {
+            hint.remove();
+          });
+          return copy.textContent.trim();
+        }).join('\n');
+      }
+
+      function legacyCopy(text) {
+        var box = document.createElement('textarea');
+        box.value = text;
+        box.setAttribute('readonly', '');
+        box.style.cssText = 'position:absolute;left:-9999px;top:0';
+        document.body.appendChild(box);
+        box.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(box);
+        return ok;
+      }
+
+      function report(ok) {
+        clearTimeout(timer);
+        btn.classList.toggle('is-copied', ok);
+        label.textContent = ok ? 'Copied' : 'Press \u2318C';
+        timer = setTimeout(function () {
+          btn.classList.remove('is-copied');
+          label.textContent = idle;
+        }, 2000);
+      }
+
+      btn.addEventListener('click', function () {
+        var text = commands();
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(function () { report(true); },
+                                                   function () { report(legacyCopy(text)); });
+        } else {
+          report(legacyCopy(text));
+        }
       });
     })();
 
@@ -1123,6 +1417,7 @@
         '</svg>';
 
       function showEmptyState() {
+        grid.setAttribute('aria-busy', 'false');
         grid.className = 'card card--decorated placeholder';
         grid.innerHTML =
           '<p class="placeholder__title">Nothing here yet.</p>' +
@@ -1209,6 +1504,7 @@
           })).then(function (cards) {
             cards.sort(function (a, b) { return a.name.localeCompare(b.name); });
             grid.innerHTML = cards.map(cardHtml).join('');
+            grid.setAttribute('aria-busy', 'false');
           });
         })
         .catch(function (err) {
