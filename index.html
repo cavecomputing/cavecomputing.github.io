@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>cavecomputing</title>
-  <meta name="description" content="Cozy, a self-hosted LLM roleplay frontend; the NanoBear system prompts; and V2 character cards. Projects by GrizzyBurr.">
+  <meta name="description" content="Small self-hosted apps (Cozy for AI roleplay, Imgy for images, Binny for files, Campfire for comics), the NanoBear system prompts, and V2 character cards. Projects by GrizzyBurr.">
   <meta name="color-scheme" content="dark light">
   <link rel="icon" href="assets/favicon.png">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="cavecomputing — projects by GrizzyBurr">
-  <meta property="og:description" content="Cozy, the NanoBear system prompts, and V2 character cards.">
+  <meta property="og:description" content="Cozy, Imgy, Binny, Campfire, the NanoBear system prompts, and V2 character cards.">
   <meta property="og:image" content="assets/cover-web.jpg">
 
   <!-- Avoid a flash of the wrong theme: apply the stored choice before first paint. -->
@@ -634,6 +634,7 @@
       font-weight: 600;
     }
     .feature__desc { color: var(--fg-muted); font-size: 0.8125rem; line-height: 1.45; }
+    .feature__desc code { color: var(--fg); font-family: var(--font-mono); font-size: 0.9em; }
 
     /* ==========================================================================
        8b. Character gallery
@@ -1022,6 +1023,56 @@
         <path d="M18.5 16.5 19 18l1.5.5-1.5.5-.5 1.5-.5-1.5L16.5 18l1.5-.5Z"/>
       </symbol>
 
+      <symbol id="i-image" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <path d="M21 15 16 10 5 21"/>
+      </symbol>
+
+      <symbol id="i-folder" viewBox="0 0 24 24">
+        <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>
+      </symbol>
+
+      <symbol id="i-tag" viewBox="0 0 24 24">
+        <path d="M3 12.2V4.5A1.5 1.5 0 0 1 4.5 3h7.7l8.8 8.8a1.5 1.5 0 0 1 0 2.1l-7.1 7.1a1.5 1.5 0 0 1-2.1 0Z"/>
+        <circle cx="7.8" cy="7.8" r="1.4"/>
+      </symbol>
+
+      <symbol id="i-link" viewBox="0 0 24 24">
+        <path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4l-1 1"/>
+        <path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1-1"/>
+      </symbol>
+
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M4 6.5h16M9.5 6.5V4.5h5v2M6 6.5l1 13a1.5 1.5 0 0 0 1.5 1.4h7a1.5 1.5 0 0 0 1.5-1.4l1-13"/>
+        <path d="M10 11v5.5M14 11v5.5"/>
+      </symbol>
+
+      <symbol id="i-lock" viewBox="0 0 24 24">
+        <rect x="4.5" y="10.5" width="15" height="10.5" rx="2"/>
+        <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>
+      </symbol>
+
+      <symbol id="i-panels" viewBox="0 0 24 24">
+        <rect x="3" y="2" width="18" height="20" rx="2"/>
+        <path d="M3 12h18M14 2l-2 10M10.5 12 9 22"/>
+      </symbol>
+
+      <symbol id="i-stack" viewBox="0 0 24 24">
+        <path d="M12 3 2.5 8 12 13l9.5-5Z"/>
+        <path d="m2.5 12.5 9.5 5 9.5-5M2.5 16.5l9.5 5 9.5-5"/>
+      </symbol>
+
+      <symbol id="i-zoom" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5"/>
+        <path d="m15.5 15.5 5 5M10.5 8v5M8 10.5h5"/>
+      </symbol>
+
+      <symbol id="i-box" viewBox="0 0 24 24">
+        <path d="M21 8 12 3 3 8v8l9 5 9-5Z"/>
+        <path d="m3 8 9 5 9-5M12 13v8"/>
+      </symbol>
+
       <symbol id="i-github" viewBox="0 0 16 16">
         <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
       </symbol>
@@ -1078,7 +1129,7 @@
         <div class="hero__plate">
           <h1 class="hero__title">cave<b>computing</b></h1>
           <p class="hero__sub">
-            Roleplay tooling, system prompts, and character cards by GrizzyBurr
+            Self-hosted apps, system prompts, and character cards by GrizzyBurr
           </p>
         </div>
       </div>
@@ -1096,10 +1147,10 @@
 
         <div class="card featured">
           <div class="featured__banner">
-            <img class="featured__art" src="assets/logo.png" alt="Cozy app icon">
+            <img class="featured__art" src="assets/cozy.svg" alt="Cozy app icon">
             <div class="featured__heading">
               <p class="featured__tagline">
-                Self-hosted, single-user, with a little Discord inspiration&nbsp;✨
+                A cozy app for AI roleplay with a little Discord inspiration&nbsp;✨
               </p>
             </div>
             <a class="btn btn--primary" href="https://github.com/cavecomputing/cozy"
@@ -1120,13 +1171,13 @@
                 <div class="quickstart__head">
                   <span class="quickstart__label">Quick start</span>
                   <span class="quickstart__note">needs git + uv</span>
-                  <button class="quickstart__copy" type="button" id="quickstart-copy">
+                  <button class="quickstart__copy" type="button">
                     <svg class="icon icon--copy" aria-hidden="true"><use href="#i-copy"/></svg>
                     <svg class="icon icon--done" aria-hidden="true"><use href="#i-check"/></svg>
                     <span class="quickstart__copy-label">Copy</span>
                   </button>
                 </div>
-                <pre class="quickstart__code" id="quickstart-code"><span>git clone https://github.com/cavecomputing/cozy.git</span><span>cd cozy &amp;&amp; uv sync</span><span>uv run app.py <i># then open localhost:5001</i></span></pre>
+                <pre class="quickstart__code"><span>git clone https://github.com/cavecomputing/cozy.git</span><span>cd cozy &amp;&amp; uv sync</span><span>uv run app.py <i># then open localhost:5000</i></span></pre>
               </div>
 
               <ul class="featured__tags">
@@ -1156,6 +1207,240 @@
                 <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>
                 <span class="feature__name">Bring your own model</span>
                 <span class="feature__desc">Any OpenAI-style endpoint, local or remote.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           Imgy
+           ================================================================== -->
+      <section id="imgy">
+        <h2 class="section-title">
+          <svg class="icon" aria-hidden="true"><use href="#i-image"/></svg>
+          Imgy <span class="section-title__sub">Image &amp; Video Organizer</span>
+        </h2>
+
+        <div class="card featured">
+          <div class="featured__banner">
+            <img class="featured__art" src="assets/imgy.svg" alt="Imgy app icon">
+            <div class="featured__heading">
+              <p class="featured__tagline">
+                A local-first image and video organizer&nbsp;🖼️
+              </p>
+            </div>
+            <a class="btn btn--primary" href="https://github.com/cavecomputing/imgy"
+               target="_blank" rel="noopener" aria-label="View on GitHub: Imgy">
+              <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
+              View on GitHub
+            </a>
+          </div>
+
+          <div class="featured__body">
+            <div class="featured__pitch">
+              <p class="prose">
+                Imgy sorts out a big folder of pictures and clips. Tag, search, favorite,
+                group, and rename from the browser with a tiny tag syntax that keeps
+                your hands on the keyboard. Your files stay ordinary files in a folder,
+                and Imgy only remembers the tags.
+              </p>
+              <div class="quickstart">
+                <div class="quickstart__head">
+                  <span class="quickstart__label">Quick start</span>
+                  <span class="quickstart__note">needs git + uv + ffmpeg</span>
+                  <button class="quickstart__copy" type="button">
+                    <svg class="icon icon--copy" aria-hidden="true"><use href="#i-copy"/></svg>
+                    <svg class="icon icon--done" aria-hidden="true"><use href="#i-check"/></svg>
+                    <span class="quickstart__copy-label">Copy</span>
+                  </button>
+                </div>
+                <pre class="quickstart__code"><span>git clone https://github.com/cavecomputing/imgy.git</span><span>cd imgy &amp;&amp; uv sync</span><span>uv run app.py <i># then open localhost:5000</i></span></pre>
+              </div>
+
+              <ul class="featured__tags">
+                <li class="tag">Python</li>
+                <li class="tag">Flask</li>
+                <li class="tag">Docker</li>
+              </ul>
+            </div>
+
+            <ul class="featured__grid">
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-tag"/></svg>
+                <span class="feature__name">Tag expressions</span>
+                <span class="feature__desc"><code>+new</code>, <code>-old</code>, <code>old&gt;new</code> in the editor or filter bar.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-zoom"/></svg>
+                <span class="feature__name">Lightbox</span>
+                <span class="feature__desc">Zoom, pan, pinch, and swipe; plays common video formats.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>
+                <span class="feature__name">Optional auto-tagging</span>
+                <span class="feature__desc">Point it at any OpenAI-style vision model.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-box"/></svg>
+                <span class="feature__name">Firefox extension</span>
+                <span class="feature__desc">Right-click an image on the web and send it in, tagged.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           Binny
+           ================================================================== -->
+      <section id="binny">
+        <h2 class="section-title">
+          <svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg>
+          Binny <span class="section-title__sub">Self-Hosted File Host</span>
+        </h2>
+
+        <div class="card featured">
+          <div class="featured__banner">
+            <img class="featured__art" src="assets/binny.svg" alt="Binny app icon">
+            <div class="featured__heading">
+              <p class="featured__tagline">
+                A small file host for your own network&nbsp;🗂️
+              </p>
+            </div>
+            <a class="btn btn--primary" href="https://github.com/cavecomputing/binny"
+               target="_blank" rel="noopener" aria-label="View on GitHub: Binny">
+              <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
+              View on GitHub
+            </a>
+          </div>
+
+          <div class="featured__body">
+            <div class="featured__pitch">
+              <p class="prose">
+                Binny is a file explorer in the browser for one person's files: folders,
+                uploads and downloads, tags you can search by, and a trash. Your files
+                stay ordinary files that any file manager can open, and Binny only
+                remembers the tags and what's in the trash.
+              </p>
+              <div class="quickstart">
+                <div class="quickstart__head">
+                  <span class="quickstart__label">Quick start</span>
+                  <span class="quickstart__note">needs git + uv</span>
+                  <button class="quickstart__copy" type="button">
+                    <svg class="icon icon--copy" aria-hidden="true"><use href="#i-copy"/></svg>
+                    <svg class="icon icon--done" aria-hidden="true"><use href="#i-check"/></svg>
+                    <span class="quickstart__copy-label">Copy</span>
+                  </button>
+                </div>
+                <pre class="quickstart__code"><span>git clone https://github.com/cavecomputing/binny.git</span><span>cd binny &amp;&amp; uv sync</span><span>BINNY_PASSWORD=pick-one uv run app.py</span></pre>
+              </div>
+
+              <ul class="featured__tags">
+                <li class="tag">Python</li>
+                <li class="tag">Flask</li>
+                <li class="tag">Docker</li>
+              </ul>
+            </div>
+
+            <ul class="featured__grid">
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-tag"/></svg>
+                <span class="feature__name">Tags &amp; search</span>
+                <span class="feature__desc">Imgy&rsquo;s tag syntax on any file or folder.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-link"/></svg>
+                <span class="feature__name">Upload from link</span>
+                <span class="feature__desc">Paste a URL and the server fetches it, even after the tab closes.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>
+                <span class="feature__name">Trash with restore</span>
+                <span class="feature__desc">Nothing is gone until you empty it.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+                <span class="feature__name">One password</span>
+                <span class="feature__desc">Remembered per device, with a phone layout.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           Campfire
+           ================================================================== -->
+      <section id="campfire">
+        <h2 class="section-title">
+          <svg class="icon" aria-hidden="true"><use href="#i-campfire"/></svg>
+          Campfire <span class="section-title__sub">Comic Reader</span>
+        </h2>
+
+        <div class="card featured">
+          <div class="featured__banner">
+            <img class="featured__art" src="assets/campfire.svg" alt="Campfire app icon">
+            <div class="featured__heading">
+              <p class="featured__tagline">
+                A single-user local comic reader&nbsp;🔥
+              </p>
+            </div>
+            <a class="btn btn--primary" href="https://github.com/cavecomputing/campfire"
+               target="_blank" rel="noopener" aria-label="View on GitHub: Campfire">
+              <svg class="icon icon--solid" aria-hidden="true"><use href="#i-github"/></svg>
+              View on GitHub
+            </a>
+          </div>
+
+          <div class="featured__body">
+            <div class="featured__pitch">
+              <p class="prose">
+                Campfire is a lightweight, self-hosted comic reader. Drop in your archives
+                and it builds a library with covers and series, then gets out of the way
+                while you read. Pages are cached exactly as extracted, never re-encoded.
+              </p>
+              <div class="quickstart">
+                <div class="quickstart__head">
+                  <span class="quickstart__label">Quick start</span>
+                  <span class="quickstart__note">needs git + docker</span>
+                  <button class="quickstart__copy" type="button">
+                    <svg class="icon icon--copy" aria-hidden="true"><use href="#i-copy"/></svg>
+                    <svg class="icon icon--done" aria-hidden="true"><use href="#i-check"/></svg>
+                    <span class="quickstart__copy-label">Copy</span>
+                  </button>
+                </div>
+                <pre class="quickstart__code"><span>git clone https://github.com/cavecomputing/campfire.git</span><span>cd campfire</span><span>docker compose -f docker/compose.yml up --build</span></pre>
+              </div>
+
+              <ul class="featured__tags">
+                <li class="tag">Python</li>
+                <li class="tag">Flask</li>
+                <li class="tag">Vite</li>
+                <li class="tag">MIT</li>
+              </ul>
+            </div>
+
+            <ul class="featured__grid">
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-panels"/></svg>
+                <span class="feature__name">Every comic format</span>
+                <span class="feature__desc">CBZ, CBR, CB7, CBT, PDF, and plain folders of images.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-stack"/></svg>
+                <span class="feature__name">Series &amp; library</span>
+                <span class="feature__desc">Covers, search, and series grouped together.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-zoom"/></svg>
+                <span class="feature__name">Reader gestures</span>
+                <span class="feature__desc">Swipe, tap, and pinch to zoom.</span>
+              </li>
+              <li class="feature">
+                <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
+                <span class="feature__name">Self-hosted</span>
+                <span class="feature__desc">Your library stays in one folder on your machine.</span>
               </li>
             </ul>
           </div>
@@ -1332,11 +1617,11 @@
       });
     })();
 
-    // Copy the quick-start commands. The "$" prompts are ::before content and the
+    // Copy a card's quick-start commands. The "$" prompts are ::before content and the
     // trailing hint is an <i>, so neither ends up in the copied text.
-    (function () {
-      var btn = document.getElementById('quickstart-copy');
-      var pre = document.getElementById('quickstart-code');
+    Array.prototype.forEach.call(document.querySelectorAll('.quickstart'), function (box) {
+      var btn = box.querySelector('.quickstart__copy');
+      var pre = box.querySelector('.quickstart__code');
       if (!btn || !pre) return;
 
       var label = btn.querySelector('.quickstart__copy-label');
@@ -1385,7 +1670,7 @@
           report(legacyCopy(text));
         }
       });
-    })();
+    });
 
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
